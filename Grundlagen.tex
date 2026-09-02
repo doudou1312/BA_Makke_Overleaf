@@ -1,0 +1,593 @@
+\chapter{Theoretische Grundlagen}\label{chapter:grundlagen}
+
+Dieses Kapitel stellt die für die Arbeit benötigten Grundlagen zusammen.
+Ausgehend von den Stoffeigenschaften des Wasserstoffs werden zunächst die
+Grundbegriffe der vorgemischten Verbrennung eingeführt
+(Abschnitt \ref{sec:vormischverbrennung}). Es folgen die Reaktionskinetik des
+Systems \ce{H2}/\ce{O2} (Abschnitt \ref{sec:kinetik}), die laminare
+Flammengeschwindigkeit als zentrale Kenngröße (Abschnitt \ref{sec:laminar})
+sowie der Einfluss von Flammenstreckung und thermodiffusiver Instabilität
+(Abschnitt \ref{sec:streckung}). Abschnitt \ref{sec:turbulent} behandelt die
+turbulente Vormischverbrennung, Abschnitt \ref{sec:flashback} die Mechanismen
+des Flammenrückschlags. Abschnitt \ref{sec:cantera} beschreibt schließlich das
+numerische Modell.
+
+\section{Wasserstoff als Brennstoff}\label{sec:wasserstoff}
+
+Wasserstoff unterscheidet sich in nahezu allen verbrennungsrelevanten
+Eigenschaften deutlich von Methan, dem Hauptbestandteil von Erdgas.
+Tabelle \ref{tab:stoffwerte} stellt die wichtigsten Kenngrößen gegenüber.
+
+\begin{table}[htbp]
+\begin{center}
+\caption[Verbrennungstechnische Eigenschaften von Wasserstoff und Methan]{Verbrennungstechnische Eigenschaften von Wasserstoff und Methan bei einem Druck von 1\,bar und einer Temperatur von 298\,K. Zusammengestellt nach \cite{Law_2006, Warnatz_2001, Verhelst_2009}.}
+\label{tab:stoffwerte}
+\begin{tabular}{lccc}
+\toprule[1.2pt]
+\textbf{Eigenschaft} & \textbf{Einheit} & \textbf{\ce{H2}} & \textbf{\ce{CH4}} \\
+\midrule[1.2pt]\midrule[1.0pt]
+Molare Masse                        & g/mol             & 2,016  & 16,04 \\
+Unterer Heizwert (massebezogen)     & MJ/kg             & 120    & 50,0  \\
+Unterer Heizwert (volumenbezogen)   & MJ/m$^3$          & 10,8   & 35,9  \\
+Stöchiometrischer Luftbedarf        & kg/kg             & 34,3   & 17,2  \\
+Zündgrenzen in Luft                 & Vol.-\%           & 4--75  & 5--15 \\
+Mindestzündenergie                  & mJ                & 0,017  & 0,28  \\
+Löschabstand                        & mm                & 0,64   & 2,03  \\
+Diffusionskoeffizient in Luft       & cm$^2$/s          & 0,61   & 0,16  \\
+Max.\ lam.\ Flammengeschwindigkeit  & m/s               & ca.\ 2,9 & ca.\ 0,40 \\
+zugehöriges $\varphi$               & --                & ca.\ 1,7 & ca.\ 1,1 \\
+Adiabate Flammentemperatur ($\varphi=1$) & K            & ca.\ 2390 & ca.\ 2225 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+Für die Frage des Flammenrückschlags sind vier dieser Eigenschaften von
+besonderer Bedeutung. Erstens liegt die maximale laminare
+Flammengeschwindigkeit rund siebenmal höher als bei Methan, sodass die Flamme
+bereits bei deutlich höheren Strömungsgeschwindigkeiten stromauf laufen kann.
+Zweitens erlaubt der weite Zündbereich einen Betrieb bei sehr kleinen
+Äquivalenzverhältnissen, in denen Kohlenwasserstoffflammen bereits verlöschen
+würden; magere Wasserstoffflammen sind gerade dort jedoch besonders anfällig
+für zellulare Instabilitäten. Drittens bedeutet der geringe Löschabstand, dass
+die Flamme auch in engen wandnahen Bereichen und in Spalten überleben kann, in
+denen eine Methanflamme durch Wärmeverlust an die Wand erlischt. Viertens führt
+der hohe Diffusionskoeffizient zu einer Lewis-Zahl deutlich unterhalb von eins,
+was die in Abschnitt \ref{sec:streckung} beschriebenen thermodiffusiven
+Effekte hervorruft.
+
+Der volumenbezogene Heizwert von Wasserstoff beträgt nur etwa
+30\,\% desjenigen von Methan. Bei gleicher thermischer Leistung muss folglich
+ein deutlich größerer Brennstoffvolumenstrom bereitgestellt werden, was
+unmittelbare Konsequenzen für die Auslegung der Zuleitungen und der
+Mischungszone hat.
+
+\section{Grundbegriffe der vorgemischten Verbrennung}\label{sec:vormischverbrennung}
+
+\subsection{Äquivalenzverhältnis}\label{subsec:phi}
+
+Die vollständige Oxidation von Wasserstoff mit Luft lässt sich unter der
+üblichen Näherung, dass trockene Luft aus 21\,Vol.-\% Sauerstoff und
+79\,Vol.-\% Stickstoff besteht, durch die Bruttoreaktionsgleichung
+
+\begin{equation}
+	\label{eq:bruttoreaktion}
+	\ce{H2} + \frac{1}{2}\left(\ce{O2} + 3{,}76\,\ce{N2}\right)
+	\longrightarrow \ce{H2O} + 1{,}88\,\ce{N2}
+\end{equation}
+
+beschreiben. Das Äquivalenzverhältnis $\varphi$ setzt das tatsächlich
+vorliegende Brennstoff-Oxidator-Verhältnis ins Verhältnis zum
+stöchiometrischen Wert,
+
+\begin{equation}
+	\label{eq:phi}
+	\varphi = \frac{\left(\dot{m}_\mathrm{B}/\dot{m}_\mathrm{L}\right)}
+	               {\left(\dot{m}_\mathrm{B}/\dot{m}_\mathrm{L}\right)_\mathrm{st}}
+	        = \frac{1}{\lambda},
+\end{equation}
+
+wobei $\dot{m}_\mathrm{B}$ und $\dot{m}_\mathrm{L}$ die Massenströme von
+Brennstoff und Luft bezeichnen und $\lambda$ die in der Anlagentechnik
+gebräuchliche Luftzahl ist. Für $\varphi < 1$ liegt ein mageres, für
+$\varphi > 1$ ein fettes Gemisch vor. Im stöchiometrischen Fall
+($\varphi = 1$) beträgt der Wasserstoffanteil im Gemisch 29,6\,Vol.-\%.
+
+Da an dem in dieser Arbeit betrachteten Prüfstand die Volumenströme von
+Wasserstoff und Luft über Massendurchflussregler eingestellt werden, ist es
+zweckmäßig, $\varphi$ direkt aus den Normvolumenströmen zu bestimmen:
+
+\begin{equation}
+	\label{eq:phi_volumen}
+	\varphi = \frac{\dot{V}_{\ce{H2}}}{\dot{V}_\mathrm{Luft}}
+	          \cdot \frac{1}{\left(\dot{V}_{\ce{H2}}/\dot{V}_\mathrm{Luft}\right)_\mathrm{st}}
+	        = \frac{\dot{V}_{\ce{H2}}}{\dot{V}_\mathrm{Luft}} \cdot 2{,}38.
+\end{equation}
+
+\subsection{Adiabate Flammentemperatur}\label{subsec:adiabat}
+
+Die adiabate Flammentemperatur $T_\mathrm{ad}$ ergibt sich aus der Bedingung,
+dass die Enthalpie des Systems bei isobarer, adiabater Umsetzung erhalten
+bleibt:
+
+\begin{equation}
+	\label{eq:adiabat}
+	h\!\left(T_\mathrm{u}, Y_{k,\mathrm{u}}\right)
+	= h\!\left(T_\mathrm{ad}, Y_{k,\mathrm{b}}\right).
+\end{equation}
+
+Hierin bezeichnen die Indizes $\mathrm{u}$ und $\mathrm{b}$ das unverbrannte
+beziehungsweise verbrannte Gas und $Y_k$ die Massenbrüche der beteiligten
+Spezies. Bei hohen Temperaturen ist die Dissoziation der Produkte zu
+berücksichtigen, sodass $T_\mathrm{ad}$ nicht aus einer einfachen
+Enthalpiebilanz mit vollständiger Umsetzung folgt, sondern über die Bedingung
+des chemischen Gleichgewichts bestimmt werden muss \cite{Warnatz_2001}. Das
+Maximum von $T_\mathrm{ad}$ liegt für Wasserstoff-Luft-Gemische geringfügig auf
+der fetten Seite von $\varphi = 1$.
+
+\section{Chemische Reaktionskinetik}\label{sec:kinetik}
+
+\subsection{Elementarreaktionen und Reaktionsgeschwindigkeit}\label{subsec:elementarreaktionen}
+
+Die Bruttoreaktionsgleichung \eqref{eq:bruttoreaktion} gibt lediglich die
+Bilanz zwischen Edukten und Produkten wieder. Der tatsächliche Ablauf der
+Oxidation setzt sich aus einer Vielzahl von Elementarreaktionen zwischen
+Radikalen und stabilen Spezies zusammen. Für eine Elementarreaktion $i$ der
+Form
+
+\begin{equation}
+	\label{eq:elementarreaktion}
+	\sum_{k=1}^{K} \nu_{ki}^{\prime}\,\mathcal{M}_k
+	\;\rightleftharpoons\;
+	\sum_{k=1}^{K} \nu_{ki}^{\prime\prime}\,\mathcal{M}_k
+\end{equation}
+
+folgt die Netto-Reaktionsrate aus dem Massenwirkungsgesetz zu
+
+\begin{equation}
+	\label{eq:reaktionsrate}
+	q_i = k_{\mathrm{f},i} \prod_{k=1}^{K} \left[X_k\right]^{\nu_{ki}^{\prime}}
+	    - k_{\mathrm{r},i} \prod_{k=1}^{K} \left[X_k\right]^{\nu_{ki}^{\prime\prime}},
+\end{equation}
+
+wobei $\left[X_k\right]$ die molare Konzentration der Spezies $k$ bezeichnet.
+Die Geschwindigkeitskoeffizienten $k_{\mathrm{f},i}$ werden üblicherweise in
+der erweiterten Arrhenius-Form
+
+\begin{equation}
+	\label{eq:arrhenius}
+	k_{\mathrm{f},i}(T) = A_i\,T^{b_i}\,\exp\!\left(-\frac{E_{\mathrm{a},i}}{R_\mathrm{m} T}\right)
+\end{equation}
+
+angegeben. Die Bildungsrate der Spezies $k$ ergibt sich durch Summation über
+alle $I$ Reaktionen:
+
+\begin{equation}
+	\label{eq:speziesquellterm}
+	\dot{\omega}_k = \sum_{i=1}^{I}
+	\left(\nu_{ki}^{\prime\prime} - \nu_{ki}^{\prime}\right) q_i.
+\end{equation}
+
+\subsection{Reaktionspfade der Wasserstoffoxidation}\label{subsec:reaktionspfade}
+
+Das Reaktionssystem \ce{H2}/\ce{O2} umfasst je nach Mechanismus etwa
+acht bis zehn Spezies (\ce{H2}, \ce{O2}, \ce{H2O}, \ce{H}, \ce{O}, \ce{OH},
+\ce{HO2}, \ce{H2O2} sowie inerte Stoßpartner) und zwanzig bis dreißig
+Elementarreaktionen. Es ist damit das am besten untersuchte Verbrennungssystem
+überhaupt und bildet zugleich das Grundgerüst jedes
+Kohlenwasserstoffmechanismus \cite{Law_2006}.
+
+Von zentraler Bedeutung ist die Kettenverzweigungsreaktion
+
+\begin{equation}
+	\label{eq:kettenverzweigung}
+	\ce{H} + \ce{O2} \rightleftharpoons \ce{O} + \ce{OH},
+\end{equation}
+
+bei der aus einem Radikal zwei entstehen. Sie besitzt eine vergleichsweise hohe
+Aktivierungsenergie und bestimmt deshalb maßgeblich die Temperaturabhängigkeit
+der Reaktionsgeschwindigkeit. In Konkurrenz dazu steht die
+Dreistoßrekombination
+
+\begin{equation}
+	\label{eq:kettenabbruch}
+	\ce{H} + \ce{O2} + \ce{M} \rightleftharpoons \ce{HO2} + \ce{M},
+\end{equation}
+
+die als Kettenabbruch wirkt, da das entstehende \ce{HO2} unter mageren
+Bedingungen vergleichsweise reaktionsträge ist. Da Reaktion
+\eqref{eq:kettenabbruch} als Dreistoßreaktion druckabhängig ist, Reaktion
+\eqref{eq:kettenverzweigung} dagegen nicht, verschiebt sich das Verhältnis
+beider Pfade mit steigendem Druck zugunsten des Kettenabbruchs. Aus der
+Gleichgewichtsbedingung beider Raten folgt die zweite Explosionsgrenze des
+Systems \ce{H2}/\ce{O2}. Dieser Zusammenhang erklärt unmittelbar, weshalb die
+laminare Flammengeschwindigkeit von Wasserstoff mit steigendem Druck abnimmt
+\cite{Law_2006, Burke_2012}.
+
+Die weitere Umsetzung erfolgt über die Kettenfortpflanzungsreaktionen
+
+\begin{align}
+	\label{eq:kettenfortpflanzung}
+	\ce{O} + \ce{H2}  &\rightleftharpoons \ce{H} + \ce{OH}, \\
+	\ce{OH} + \ce{H2} &\rightleftharpoons \ce{H} + \ce{H2O},
+\end{align}
+
+wobei die zweite Reaktion den Hauptanteil der Wasserbildung trägt.
+
+\subsection{Verfügbare Reaktionsmechanismen}\label{subsec:mechanismen}
+
+Für die vorliegende Arbeit kommen mehrere validierte Mechanismen in Betracht.
+Der Mechanismus von Ó Conaire et al.\ \cite{OConaire_2004} ist über einen
+weiten Bereich von Druck, Temperatur und Äquivalenzverhältnis validiert und
+wird häufig als Referenz herangezogen. Li et al.\ \cite{Li_2004} und
+Burke et al.\ \cite{Burke_2012} legen den Schwerpunkt auf erhöhte Drücke,
+wobei Burke et al.\ insbesondere die Druckabhängigkeit der Reaktion
+\eqref{eq:kettenabbruch} überarbeitet haben. Kéromnès et al.\
+\cite{Keromnes_2013} erweitern die Validierungsbasis auf Synthesegasgemische.
+Der San-Diego-Mechanismus \cite{SanDiego_Mech} zeichnet sich durch einen
+bewusst reduzierten Umfang bei gleichzeitig guter Vorhersagequalität aus.
+
+Da die Unterschiede zwischen diesen Mechanismen in der berechneten laminaren
+Flammengeschwindigkeit je nach Betriebspunkt mehrere Prozent betragen können,
+wird in dieser Arbeit ein Vergleich mehrerer Mechanismen durchgeführt, um die
+resultierende Modellunsicherheit zu quantifizieren.
+
+\section{Die laminare Vormischflamme}\label{sec:laminar}
+
+\subsection{Flammenstruktur und laminare Flammengeschwindigkeit}\label{subsec:sl}
+
+Eine frei propagierende, adiabate und eindimensionale Vormischflamme breitet
+sich relativ zum unverbrannten Gas mit der laminaren Flammengeschwindigkeit
+$s_\mathrm{L}$ aus. Sie ist eine reine Stoffeigenschaft des Gemisches und hängt
+ausschließlich von Zusammensetzung, Vorwärmtemperatur $T_\mathrm{u}$ und Druck
+$p$ ab.
+
+Die Flamme lässt sich in eine Vorwärmzone, in der das Frischgas durch
+Wärmeleitung aus der Reaktionszone aufgeheizt wird, und eine dünne
+Reaktionszone unterteilen, in der die Wärmefreisetzung stattfindet. Aus der
+Betrachtung des Gleichgewichts zwischen diffusivem Wärmetransport und
+chemischer Umsatzrate folgt die auf Mallard und Le Chatelier zurückgehende
+Skalierung
+
+\begin{equation}
+	\label{eq:mallard}
+	s_\mathrm{L} \sim \sqrt{a \cdot \dot{\omega}},
+	\qquad
+	a = \frac{\lambda}{\rho\,c_p},
+\end{equation}
+
+mit der Temperaturleitfähigkeit $a$ und einer charakteristischen
+Reaktionsrate $\dot{\omega}$. Die zugehörige laminare Flammendicke wird in
+dieser Arbeit über den maximalen Temperaturgradienten definiert,
+
+\begin{equation}
+	\label{eq:flammendicke}
+	\delta_\mathrm{L} = \frac{T_\mathrm{b} - T_\mathrm{u}}
+	{\left|\mathrm{d}T/\mathrm{d}x\right|_\mathrm{max}},
+\end{equation}
+
+da diese Definition unmittelbar aus dem berechneten Temperaturprofil folgt und
+im Gegensatz zur diffusiven Abschätzung $\delta_\mathrm{D} = a/s_\mathrm{L}$
+keine Annahme über konstante Stoffwerte erfordert \cite{Poinsot_2011}.
+
+\subsection{Einflussgrößen}\label{subsec:einflussgroessen}
+
+Die Abhängigkeit der laminaren Flammengeschwindigkeit vom
+Äquivalenzverhältnis weist ein ausgeprägtes Maximum auf. Bei
+Kohlenwasserstoffen liegt dieses nahe der Stöchiometrie
+($\varphi \approx 1{,}05\ldots1{,}1$), da dort die Flammentemperatur maximal
+wird. Bei Wasserstoff-Luft-Gemischen verschiebt sich das Maximum dagegen
+deutlich auf die fette Seite zu $\varphi \approx 1{,}7$
+\cite{Law_2006, Egolfopoulos_1990, Dahoe_2005}. Ursache hierfür ist die hohe
+Diffusivität des Wasserstoffmoleküls: In fetten Gemischen diffundiert
+Wasserstoff schneller in die Reaktionszone hinein, als Wärme aus ihr
+abgeführt wird, sodass die Umsatzrate über den Punkt maximaler
+Flammentemperatur hinaus weiter ansteigt.
+
+Die Abhängigkeit von Vorwärmtemperatur und Druck wird üblicherweise durch den
+Potenzansatz
+
+\begin{equation}
+	\label{eq:sl_skalierung}
+	s_\mathrm{L}(T_\mathrm{u}, p) = s_{\mathrm{L},0}
+	\left(\frac{T_\mathrm{u}}{T_0}\right)^{\alpha}
+	\left(\frac{p}{p_0}\right)^{\beta}
+\end{equation}
+
+beschrieben, wobei $s_{\mathrm{L},0}$ der Wert im Referenzzustand
+($T_0 = 298\,$K, $p_0 = 1\,$bar) ist. Für Wasserstoff-Luft-Gemische liegt der
+Temperaturexponent typischerweise bei $\alpha \approx 1{,}5\ldots2$, der
+Druckexponent ist negativ ($\beta < 0$) \cite{Verhelst_2009}. Die
+Druckabhängigkeit folgt unmittelbar aus der in
+Abschnitt \ref{subsec:reaktionspfade} beschriebenen Konkurrenz zwischen
+Kettenverzweigung und Kettenabbruch.
+
+\section{Flammenstreckung und thermodiffusive Instabilität}\label{sec:streckung}
+
+\subsection{Streckungsrate und Markstein-Zahl}\label{subsec:markstein}
+
+Reale Flammen sind gekrümmt und einem Dehnungsfeld ausgesetzt. Die
+Streckungsrate $\kappa$ beschreibt die relative zeitliche Änderung eines
+Flammenflächenelements $A$,
+
+\begin{equation}
+	\label{eq:streckungsrate}
+	\kappa = \frac{1}{A}\frac{\mathrm{d}A}{\mathrm{d}t}.
+\end{equation}
+
+Für schwache Streckung besteht ein linearer Zusammenhang zwischen der
+gestreckten Flammengeschwindigkeit $s_\mathrm{L}^{\kappa}$ und der
+ungestreckten Flammengeschwindigkeit $s_\mathrm{L}^{0}$,
+
+\begin{equation}
+	\label{eq:markstein}
+	s_\mathrm{L}^{\kappa} = s_\mathrm{L}^{0} - \mathcal{L}\,\kappa
+	\qquad\text{bzw.}\qquad
+	\frac{s_\mathrm{L}^{\kappa}}{s_\mathrm{L}^{0}}
+	= 1 - \mathrm{Ma}\cdot\mathrm{Ka},
+\end{equation}
+
+mit der Markstein-Länge $\mathcal{L}$, der Markstein-Zahl
+$\mathrm{Ma} = \mathcal{L}/\delta_\mathrm{L}$ und der Karlovitz-Zahl
+$\mathrm{Ka} = \kappa\,\delta_\mathrm{L}/s_\mathrm{L}^{0}$
+\cite{Poinsot_2011, Matalon_2007}.
+
+\subsection{Lewis-Zahl und zellulare Instabilität}\label{subsec:lewis}
+
+Das Vorzeichen der Markstein-Zahl wird im Wesentlichen durch die Lewis-Zahl
+
+\begin{equation}
+	\label{eq:lewis}
+	\mathrm{Le} = \frac{a}{D} = \frac{\lambda}{\rho\,c_p\,D}
+\end{equation}
+
+bestimmt, also durch das Verhältnis von thermischer zu molekularer
+Diffusivität des Mangelreaktanden. Für $\mathrm{Le} > 1$ wirkt die Streckung
+stabilisierend, für $\mathrm{Le} < 1$ destabilisierend.
+
+Magere Wasserstoff-Luft-Flammen erreichen Lewis-Zahlen von etwa
+$\mathrm{Le} \approx 0{,}3$, da Wasserstoff als Mangelreaktand wesentlich
+schneller diffundiert, als Wärme geleitet wird. In einem konvex zum Frischgas
+gekrümmten Flammenabschnitt fokussiert die Wasserstoffdiffusion den Brennstoff
+lokal, während die Wärme divergent abgeführt wird. Die lokale
+Flammentemperatur und damit die lokale Ausbreitungsgeschwindigkeit steigen an,
+die Auslenkung verstärkt sich. Es entsteht eine selbstverstärkende, zellulare
+Flammenstruktur \cite{Matalon_2007, Berger_2022}.
+
+Diese thermodiffusive Instabilität überlagert sich der hydrodynamischen
+Darrieus-Landau-Instabilität, die aus der Dichteänderung über die Flammenfront
+resultiert und für alle Vormischflammen wirksam ist. Die praktische Konsequenz
+ist erheblich: Durch die Vergrößerung der Flammenoberfläche kann die effektive
+Ausbreitungsgeschwindigkeit einer zellularen Wasserstoffflamme die
+eindimensional berechnete laminare Flammengeschwindigkeit um ein Vielfaches
+übersteigen \cite{Frouzakis_2015, Berger_2022}. Eindimensionale Rechnungen
+liefern in diesem Bereich also eine untere Schranke für die Rückschlagsneigung.
+Dieser Umstand ist bei der Interpretation der Ergebnisse zwingend zu
+berücksichtigen.
+% TODO: Verweis auf das Ergebniskapitel ergaenzen, sobald dieses angelegt ist
+
+\section{Turbulente Vormischverbrennung}\label{sec:turbulent}
+
+Am untersuchten Brenner liegen turbulente Strömungsbedingungen vor. Die
+turbulente Flammengeschwindigkeit $s_\mathrm{T}$ übersteigt $s_\mathrm{L}$,
+weil die Turbulenz die Flammenfront faltet und dadurch deren Oberfläche
+vergrößert. Nach Damköhler \cite{Damkoehler_1940} gilt im Bereich großskaliger
+Turbulenz
+
+\begin{equation}
+	\label{eq:damkoehler}
+	\frac{s_\mathrm{T}}{s_\mathrm{L}} = \frac{A_\mathrm{T}}{A_\mathrm{L}}
+	\approx 1 + C\,\frac{u^{\prime}}{s_\mathrm{L}},
+\end{equation}
+
+mit der turbulenten Schwankungsgeschwindigkeit $u^{\prime}$ und einer
+empirischen Konstanten $C$.
+
+Zur Einordnung des Verbrennungsregimes dienen die Damköhler-Zahl und die
+Karlovitz-Zahl,
+
+\begin{equation}
+	\label{eq:da_ka}
+	\mathrm{Da} = \frac{\tau_\mathrm{t}}{\tau_\mathrm{c}}
+	= \frac{l_\mathrm{t}/u^{\prime}}{\delta_\mathrm{L}/s_\mathrm{L}},
+	\qquad
+	\mathrm{Ka} = \frac{\tau_\mathrm{c}}{\tau_\eta}
+	= \left(\frac{\delta_\mathrm{L}}{\eta}\right)^{2},
+\end{equation}
+
+worin $l_\mathrm{t}$ das integrale Längenmaß und $\eta$ das
+Kolmogorov-Längenmaß bezeichnen. Im Borghi-Diagramm \cite{Borghi_1985, Peters_2000}
+lassen sich damit die Regime der gefalteten Flammenfronten
+($\mathrm{Ka} < 1$), der dünnen Reaktionszonen
+($1 < \mathrm{Ka} < 100$) und der gerührten Reaktionszonen abgrenzen.
+
+Die Bestimmung von $\delta_\mathrm{L}$ und $s_\mathrm{L}$ aus den in
+Abschnitt \ref{sec:cantera} beschriebenen Rechnungen erlaubt es somit, die
+Betriebspunkte des Prüfstands im Borghi-Diagramm einzuordnen.
+
+\section{Mechanismen des Flammenrückschlags}\label{sec:flashback}
+
+Ein Flammenrückschlag tritt ein, wenn die Flamme sich lokal schneller stromauf
+bewegt, als das Frischgas sie stromab transportiert. Die allgemeine Bedingung
+lautet
+
+\begin{equation}
+	\label{eq:flashback_bedingung}
+	s_\mathrm{T} > u_\mathrm{lokal}.
+\end{equation}
+
+Entscheidend ist der Zusatz \emph{lokal}: Der Rückschlag wird nicht durch die
+mittlere Strömungsgeschwindigkeit ausgelöst, sondern durch das Vorhandensein
+von Bereichen mit reduzierter Geschwindigkeit. Je nachdem, wodurch ein solcher
+Bereich entsteht, unterscheidet man die im Folgenden beschriebenen
+Mechanismen \cite{Kalantari_2017, Lieuwen_2008}.
+
+\subsection{Rückschlag in der wandnahen Grenzschicht}\label{subsec:blf}
+
+In der wandnahen Grenzschicht sinkt die Strömungsgeschwindigkeit zur Wand hin
+auf null ab. Gleichzeitig wird die Flamme durch den Wärmeverlust an die Wand
+gelöscht, sobald sie sich der Wand auf weniger als den Löschabstand
+$\delta_\mathrm{q}$ nähert. Aus dem Gleichgewicht beider Effekte folgt der von
+Lewis und von Elbe eingeführte kritische Geschwindigkeitsgradient
+
+\begin{equation}
+	\label{eq:kritischer_gradient}
+	g_\mathrm{c} = \left.\frac{\partial u}{\partial y}\right|_\mathrm{Wand,krit}
+	\approx \frac{s_\mathrm{L}}{\delta_\mathrm{q}}.
+\end{equation}
+
+Ein Rückschlag wird demnach erwartet, sobald der tatsächliche Wandgradient
+unter $g_\mathrm{c}$ fällt. Wegen des kleinen Löschabstands von Wasserstoff
+(Tabelle \ref{tab:stoffwerte}) liegt $g_\mathrm{c}$ um mehr als eine
+Größenordnung über dem Wert von Methan.
+
+Neuere Untersuchungen zeigen allerdings, dass dieses Modell die
+Rückschlagsneigung systematisch unterschätzt. Eichler und Sattelmayer
+\cite{Eichler_2012} sowie Baumgartner et al.\ \cite{Baumgartner_2016} weisen
+mittels hochauflösender Geschwindigkeitsmessungen nach, dass die
+Wärmefreisetzung der annähernden Flamme über den Dichtesprung einen
+positiven Druckgradienten stromauf erzeugt, der die Grenzschicht ablöst. Die
+Flamme schafft sich damit selbst das Rückströmgebiet, in dem sie sich
+fortbewegt; der Vorgang ist folglich rückgekoppelt und nicht durch das
+ungestörte Strömungsfeld allein beschreibbar.
+
+Endres und Sattelmayer \cite{Endres_2018} bestätigen dieses Bild numerisch und
+leiten daraus ein handhabbares Kriterium ab: Der Rückschlag setzt ein, sobald
+die Ausdehnung der lokalen Ablösegebiete den Löschabstand der Flamme deutlich
+überschreitet. Damit tritt an die Stelle des rein kinematischen Vergleichs von
+Gleichung \eqref{eq:kritischer_gradient} eine geometrische Bedingung, die
+Wärmefreisetzung und Strömungsablösung miteinander verknüpft. Für die
+numerische Vorhersage bedeutet dies, dass sowohl die differentielle Diffusion
+als auch die Thermodiffusion im Speziestransport berücksichtigt werden
+müssen \cite{Endres_2018}.
+
+\subsection{Verbrennungsinduziertes Wirbelaufplatzen}\label{subsec:civb}
+
+In drallstabilisierten Brennern kann die Wärmefreisetzung der Flamme das
+Wirbelaufplatzen stromauf verlagern. Die Flamme reduziert über die
+Volumenexpansion die axiale Impulsstromdichte im Wirbelkern und schwächt
+gleichzeitig durch Baroklinität die azimutale Vortizität. Beides begünstigt
+die Ausbildung eines Rückströmgebiets weiter stromauf, in das die Flamme
+nachrückt; der Vorgang setzt sich selbstverstärkend fort. Kröner et al.\
+\cite{Kroner_2003} und Fritz et al.\ \cite{Fritz_2004} haben diesen als CIVB
+bezeichneten Mechanismus systematisch untersucht und quantitative
+Rückschlagsgrenzen angegeben.
+
+\subsection{Rückschlag in der Kernströmung}\label{subsec:core}
+
+Übersteigt die turbulente Flammengeschwindigkeit die axiale
+Strömungsgeschwindigkeit im Kern der Strömung, so propagiert die Flamme
+unabhängig von Wand- und Dralleffekten stromauf. Dieser Mechanismus wird
+insbesondere bei hohen Äquivalenzverhältnissen und geringen
+Strömungsgeschwindigkeiten relevant. Da $s_\mathrm{T}$ nach
+Gleichung \eqref{eq:damkoehler} unmittelbar mit $s_\mathrm{L}$ skaliert, ist
+die laminare Flammengeschwindigkeit hier die maßgebliche Eingangsgröße --
+weshalb die eindimensionalen Rechnungen dieser Arbeit für genau diesen
+Mechanismus die belastbarste Aussage liefern. Ali und Bastiaans
+\cite{Ali_2026} untersuchen den Vorgang für ultramagere Freistrahlflammen und
+zeigen, dass die thermodiffusiv verstärkte Flammenausbreitung dort auch bei
+sehr kleinen Äquivalenzverhältnissen zum Rückschlag führen kann. Fruzza et al.\
+\cite{Fruzza_2025} weisen darauf hin, dass eine Reduktion auf zwei Dimensionen
+die Flammendynamik verfälscht -- ein Hinweis, der für eine spätere
+CFD-Betrachtung unmittelbar relevant ist.
+
+\subsection{Akustisch und instabilitätsgetriebener Rückschlag}\label{subsec:acoustic}
+
+Verbrennungsinstabilitäten koppeln Wärmefreisetzung und Druckschwankungen im
+Brennraum. Die dabei auftretenden Geschwindigkeitsschwankungen können die
+momentane Anströmgeschwindigkeit periodisch so weit absenken, dass die Flamme
+kurzzeitig stromauf läuft. Dieser Mechanismus ist transient und lässt sich mit
+stationären Betrachtungen grundsätzlich nicht erfassen.
+
+\subsection{Kenngrößen zur Bewertung}\label{subsec:kenngroessen}
+
+Zur dimensionslosen Beschreibung der Rückschlagsgrenze hat sich die
+Flammen-Péclet-Zahl
+
+\begin{equation}
+	\label{eq:peclet}
+	\mathrm{Pe} = \frac{g_\mathrm{c}\,\delta_\mathrm{L}}{s_\mathrm{L}}
+\end{equation}
+
+etabliert, die eine Übertragung zwischen unterschiedlichen Geometrien und
+Betriebsbedingungen erlaubt \cite{Kalantari_2017}. Sowohl $g_\mathrm{c}$ als
+auch $\delta_\mathrm{L}$ und $s_\mathrm{L}$ sind aus den in dieser Arbeit
+durchgeführten Rechnungen beziehungsweise aus der Prüfstandsgeometrie
+zugänglich.
+
+\section{Numerische Modellierung mit Cantera}\label{sec:cantera}
+
+\subsection{Modellgleichungen}\label{subsec:modellgleichungen}
+
+Cantera \cite{Cantera_2023} ist eine quelloffene Programmbibliothek zur
+Lösung von Problemen der chemischen Kinetik, der Thermodynamik und des
+Stofftransports. Für die vorliegende Arbeit wird das Modell der frei
+propagierenden, adiabaten eindimensionalen Vormischflamme
+(\texttt{FreeFlame}) verwendet.
+
+Im flammenfesten Bezugssystem lauten die stationären Erhaltungsgleichungen
+\cite{Poinsot_2011, Cantera_2023}:
+
+\begin{equation}
+	\label{eq:kontinuitaet}
+	\dot{m} = \rho\,u = \mathrm{const.},
+\end{equation}
+
+\begin{equation}
+	\label{eq:spezies}
+	\dot{m}\,\frac{\mathrm{d}Y_k}{\mathrm{d}x}
+	+ \frac{\mathrm{d}}{\mathrm{d}x}\left(\rho\,Y_k\,V_k\right)
+	= \dot{\omega}_k\,W_k,
+	\qquad k = 1,\ldots,K,
+\end{equation}
+
+\begin{equation}
+	\label{eq:energie}
+	\dot{m}\,c_p\,\frac{\mathrm{d}T}{\mathrm{d}x}
+	= \frac{\mathrm{d}}{\mathrm{d}x}\left(\lambda\,\frac{\mathrm{d}T}{\mathrm{d}x}\right)
+	- \sum_{k=1}^{K}\rho\,Y_k\,V_k\,c_{p,k}\,\frac{\mathrm{d}T}{\mathrm{d}x}
+	- \sum_{k=1}^{K} \dot{\omega}_k\,h_k\,W_k.
+\end{equation}
+
+Hierin sind $V_k$ die Diffusionsgeschwindigkeit, $W_k$ die molare Masse und
+$h_k$ die spezifische Enthalpie der Spezies $k$. Der Eigenwert des Problems
+ist der Massenstrom $\dot{m}$, aus dem die laminare Flammengeschwindigkeit
+unmittelbar folgt:
+
+\begin{equation}
+	\label{eq:sl_aus_massenstrom}
+	s_\mathrm{L} = \frac{\dot{m}}{\rho_\mathrm{u}}.
+\end{equation}
+
+\subsection{Transportmodell}\label{subsec:transport}
+
+Cantera stellt für die Berechnung der Diffusionsgeschwindigkeiten mehrere
+Modelle bereit. Das Modell \texttt{mixture-averaged} berechnet für jede Spezies
+einen effektiven Diffusionskoeffizienten gegenüber der Mischung, das Modell
+\texttt{multicomponent} löst dagegen die vollständige Matrix der binären
+Diffusionskoeffizienten und erlaubt zusätzlich die Berücksichtigung der
+Thermodiffusion (Soret-Effekt).
+
+Gerade für Wasserstoff ist diese Unterscheidung nicht unerheblich: Wegen der
+geringen molaren Masse von \ce{H2} und \ce{H} liefert das gemittelte Modell
+insbesondere bei mageren Gemischen merklich abweichende Ergebnisse. In dieser
+Arbeit wird daher der Einfluss des Transportmodells auf $s_\mathrm{L}$
+explizit untersucht.
+
+\subsection{Numerische Umsetzung und Gitterunabhängigkeit}\label{subsec:numerik}
+
+Das Gleichungssystem wird auf einem adaptiven Gitter mit einem gedämpften
+Newton-Verfahren gelöst. Die Gitterverfeinerung wird über die Parameter
+\texttt{ratio}, \texttt{slope} und \texttt{curve} gesteuert, welche das
+maximale Verhältnis benachbarter Zellweiten sowie die maximal zulässige
+Änderung von Steigung und Krümmung der Lösungsvariablen zwischen zwei
+Gitterpunkten begrenzen.
+
+Da die berechnete Flammengeschwindigkeit von diesen Parametern abhängt, ist
+vor der eigentlichen Parameterstudie eine Gitterunabhängigkeitsstudie
+durchzuführen. Ebenso ist sicherzustellen, dass das Rechengebiet hinreichend
+groß gewählt wird, damit die Randbedingungen die Lösung nicht beeinflussen.
+Beide Punkte werden im Methodikkapitel behandelt.
+% TODO: Verweis auf das Methodikkapitel ergaenzen, sobald dieses angelegt ist
+
+% TODO: Verweis auf das Methodikkapitel korrigieren, sobald dieses angelegt ist

@@ -1,0 +1,175 @@
+\chapter{Einleitung}\label{chapter:einleitung}
+
+\section{Motivation}\label{sec:motivation}
+
+Die Dekarbonisierung der Energieversorgung zählt zu den zentralen technischen
+Herausforderungen der kommenden Jahrzehnte. Während sich die Stromerzeugung aus
+erneuerbaren Quellen bereits weitgehend elektrifizieren lässt, bleiben
+Hochtemperaturprozesse in der Industrie, die Bereitstellung von Regelleistung
+sowie Teile des Schwerlast- und Luftverkehrs auf chemisch gespeicherte Energie
+angewiesen. Wasserstoff bietet hier die Möglichkeit, elektrische Energie
+speicherbar zu machen und in einer Verbrennungsreaktion wieder freizusetzen,
+ohne dass dabei Kohlendioxid entsteht.
+
+Die technische Umsetzung dieser Idee ist jedoch nicht dadurch abgeschlossen,
+dass bestehende Brenner mit einem anderen Brennstoff versorgt werden.
+Wasserstoff unterscheidet sich in seinen verbrennungstechnischen Eigenschaften
+deutlich von den bislang eingesetzten Kohlenwasserstoffen. Die laminare
+Flammengeschwindigkeit von stöchiometrischen Wasserstoff-Luft-Gemischen liegt
+mit rund 2,9\,m/s etwa um den Faktor sieben über derjenigen von
+Methan-Luft-Gemischen \cite{Law_2006, Verhelst_2009}. Hinzu kommen ein sehr
+weiter Zündbereich von etwa 4\,Vol.-\% bis 75\,Vol.-\%,
+eine um eine Größenordnung geringere Mindestzündenergie und ein Löschabstand,
+der weniger als ein Drittel des Wertes von Methan beträgt
+\cite{Verhelst_2009, Warnatz_2001}.
+
+Diese Eigenschaften wirken sich unmittelbar auf die Betriebssicherheit
+vorgemischter Brenner aus. Die Vormischung von Brennstoff und Oxidator vor der
+Reaktionszone ist die technisch etablierte Maßnahme zur Absenkung der
+Stickoxidemissionen, da sie lokale Temperaturspitzen im Bereich
+stöchiometrischer Verbrennung vermeidet \cite{Lieuwen_2008}. Sie setzt
+allerdings voraus, dass die Flamme stabil stromab des Brenneraustritts
+verankert bleibt. Genau diese Voraussetzung ist bei Wasserstoff nur noch in
+einem deutlich eingeschränkten Betriebsbereich erfüllt.
+
+\section{Problemstellung}\label{sec:problemstellung}
+
+Als Flammenrückschlag oder \emph{Flashback} wird das stromaufwärts gerichtete
+Eindringen der Flamme aus dem Brennraum in die Vormischstrecke bezeichnet. Der
+Vorgang tritt auf, sobald die Ausbreitungsgeschwindigkeit der Flamme lokal die
+entgegengerichtete Strömungsgeschwindigkeit des Frischgases übersteigt. Da die
+Vormischstrecke thermisch nicht für den Flammenbetrieb ausgelegt ist, führt ein
+Flashback innerhalb kurzer Zeit zu Bauteilschäden und erfordert eine
+Schnellabschaltung der Anlage \cite{Lieuwen_2008, Kalantari_2017}.
+
+In der Literatur werden vier grundlegende Mechanismen unterschieden, über die
+ein Flammenrückschlag ausgelöst werden kann: der Rückschlag in der
+wandnahen Grenzschicht, der Rückschlag durch verbrennungsinduziertes
+Wirbelaufplatzen (\emph{combustion induced vortex breakdown}, CIVB), der
+Rückschlag in der Kernströmung infolge turbulenter Flammenausbreitung sowie der
+akustisch beziehungsweise durch Verbrennungsinstabilitäten getriebene
+Rückschlag \cite{Kalantari_2017, Kroner_2003}. Welcher dieser Mechanismen
+dominiert, hängt von der Brennergeometrie, dem Drallgrad, dem Druckniveau und
+insbesondere vom Äquivalenzverhältnis ab.
+
+Allen Mechanismen gemeinsam ist, dass die laminare Flammengeschwindigkeit
+$s_\mathrm{L}$ als charakteristische Geschwindigkeitsskala in die Beschreibung
+eingeht. Sie bestimmt über den kritischen Geschwindigkeitsgradienten die
+Rückschlagsgrenze in der Grenzschicht, sie skaliert die turbulente
+Flammengeschwindigkeit in der Kernströmung und sie geht über die Flammendicke
+in die Beschreibung der Flammenstreckung ein. Eine belastbare Vorhersage von
+Flashback-Grenzen setzt daher voraus, dass $s_\mathrm{L}$ und die zugehörige
+Flammenstruktur für den betrachteten Betriebsbereich hinreichend genau bekannt
+sind.
+
+Erschwerend kommt hinzu, dass sich Wasserstoffflammen wegen ihrer niedrigen
+Lewis-Zahl grundsätzlich anders verhalten als Kohlenwasserstoffflammen. Magere
+Wasserstoff-Luft-Flammen sind thermodiffusiv instabil; sie bilden zellulare
+Strukturen aus, deren effektive Ausbreitungsgeschwindigkeit die eindimensional
+berechnete laminare Flammengeschwindigkeit deutlich übersteigen kann
+\cite{Matalon_2007, Berger_2022, Frouzakis_2015}. Eine rein eindimensionale
+Betrachtung liefert damit zwar die notwendige chemische Grundlage, sie stellt
+aber gleichzeitig eine konservative untere Schranke dar, deren Gültigkeitsbereich
+bekannt sein muss.
+
+\section{Stand der Forschung}\label{sec:stand_der_forschung}
+
+Der Grenzschichtrückschlag wurde erstmals von Lewis und von Elbe über das
+Konzept des kritischen Geschwindigkeitsgradienten beschrieben und ist seither
+sowohl experimentell als auch numerisch umfassend untersucht worden. Einen
+aktuellen Überblick über Mechanismen, Modellansätze und experimentelle Befunde
+geben Kalantari und McDonell \cite{Kalantari_2017}. Die Arbeiten von Eichler und
+Sattelmayer \cite{Eichler_2012} sowie Baumgartner et al.\ \cite{Baumgartner_2016}
+zeigen mittels hochauflösender Geschwindigkeitsmessungen, dass die
+rückschlagende Flamme die Grenzschicht nicht passiv durchdringt, sondern über
+die Wärmefreisetzung selbst eine Strömungsablösung induziert und sich damit den
+Weg stromauf bahnt. Das klassische Modell des kritischen
+Geschwindigkeitsgradienten unterschätzt die Rückschlagsneigung deshalb
+systematisch.
+
+Numerisch hat sich die Grobstruktursimulation (LES) als tragfähiger Zugang
+erwiesen. Endres und Sattelmayer \cite{Endres_2018} zeigen für eingeschlossene
+Wasserstoff-Luft-Flammen, dass eine LES mit detaillierter Reaktionskinetik und
+differentieller Diffusion die experimentell bestimmten Rückschlagsgrenzen
+quantitativ wiedergibt. Ihr zentrales Ergebnis ist zugleich ein
+Kriterium: Der Rückschlag setzt ein, sobald die Ausdehnung der lokalen
+Ablösegebiete den Löschabstand der Flamme deutlich überschreitet. Fruzza et al.\
+\cite{Fruzza_2025} weisen für perforierte Brenner nach, dass zweidimensionale
+Rechnungen die Flammendynamik nur unzureichend erfassen und die
+Rückschlagsgeschwindigkeiten entsprechend fehlerhaft vorhersagen. Ali und
+Bastiaans \cite{Ali_2026} untersuchen den Mechanismus für ultramagere
+Wasserstoff-Luft-Freistrahlflammen.
+
+Am Lehrstuhl für Technische Thermodynamik der FAU selbst wurden additiv
+gefertigte Vormischbrenner für Wasserstoff mit optischen Messverfahren
+verglichen \cite{Faderl_2026}; ergänzend zeigt die Arbeit von Strickling et al.\
+\cite{Strickling_ua}, dass eine radiale Gemischschichtung die Rückschlagsneigung
+gezielt herabsetzen kann. Diese Arbeiten bilden den unmittelbaren Kontext der
+vorliegenden Untersuchung.
+
+Für drallstabilisierte Brenner haben Kröner et al.\ \cite{Kroner_2003} und
+Fritz et al.\ \cite{Fritz_2004} den CIVB-Mechanismus als maßgeblichen
+Rückschlagspfad identifiziert und quantitative Grenzen für dessen Auftreten
+angegeben. Lieuwen et al.\ \cite{Lieuwen_2008} ordnen diese Ergebnisse in den
+Kontext der Brennstoffflexibilität ein und zeigen, wie stark die
+Betriebsgrenzen bereits durch moderate Wasserstoffbeimischung eingeengt werden.
+
+Auf Seiten der Reaktionskinetik liegen für das System \ce{H2}/\ce{O2}
+mittlerweile mehrere detaillierte, breit validierte Mechanismen vor, unter
+anderem die Modelle von Ó Conaire et al.\ \cite{OConaire_2004}, Li et al.\
+\cite{Li_2004}, Burke et al.\ \cite{Burke_2012} und Kéromnès et al.\
+\cite{Keromnes_2013}. Mit der Softwarebibliothek Cantera \cite{Cantera_2023}
+steht ein quelloffenes Werkzeug zur Verfügung, mit dem sich auf Basis dieser
+Mechanismen eindimensionale, frei propagierende Vormischflammen mit
+vertretbarem Rechenaufwand lösen lassen.
+
+Was in der Literatur vergleichsweise selten geschlossen dargestellt wird, ist
+die Verbindung zwischen den so berechneten chemischen Kenngrößen und den an
+einem konkreten Prüfstand gemessenen Rückschlagsgrenzen. Genau an dieser Stelle
+setzt die vorliegende Arbeit an.
+
+\section{Zielsetzung}\label{sec:zielsetzung}
+
+Ziel dieser Arbeit ist es, das Auftreten von Flammenrückschlägen in
+Wasserstoffflammen numerisch zu untersuchen und die berechneten Kenngrößen mit
+experimentellen Daten des Prüfstands abzugleichen. Im Einzelnen werden folgende
+Fragestellungen bearbeitet:
+
+\begin{itemize}
+	\item Wie hängen die laminare Flammengeschwindigkeit, die Flammendicke und
+	      die adiabate Flammentemperatur von Wasserstoff-Luft-Gemischen vom
+	      Äquivalenzverhältnis, von der Vorwärmtemperatur und vom Druck ab?
+	\item Welchen Einfluss hat die Wahl des Reaktionsmechanismus auf die
+	      berechneten Kenngrößen, und wie groß ist die daraus resultierende
+	      Unsicherheit?
+	\item Welche Kombinationen aus Volumenstrom und Äquivalenzverhältnis führen
+	      am untersuchten Brenner zu einem stabilen, welche zu einem
+	      instabilen Betrieb?
+	\item Welche aus der Simulation zugänglichen Größen eignen sich als
+	      Indikator für einen bevorstehenden Flammenrückschlag?
+	\item Wie gut lassen sich die experimentell bestimmten Rückschlagsgrenzen
+	      mit den eindimensionalen Rechnungen abbilden, und welche Effekte
+	      erfordern eine weitergehende CFD-Betrachtung?
+\end{itemize}
+
+Die Untersuchung erfolgt in einem ersten Schritt mit eindimensionalen
+Simulationen frei propagierender Vormischflammen in Cantera. Darauf aufbauend
+wird bewertet, welche Parameter für eine spätere dreidimensionale
+Strömungssimulation, in der Geometrie und Turbulenz explizit berücksichtigt
+werden, von Bedeutung sind.
+
+\section{Aufbau der Arbeit}\label{sec:aufbau}
+
+Kapitel \ref{chapter:grundlagen} stellt die theoretischen Grundlagen zusammen.
+Behandelt werden die Eigenschaften von Wasserstoff als Brennstoff, die
+Grundbegriffe der vorgemischten Verbrennung, die chemische Reaktionskinetik des
+Systems \ce{H2}/\ce{O2}, die laminare Flammengeschwindigkeit sowie der Einfluss
+von Flammenstreckung und thermodiffusiver Instabilität. Anschließend werden die
+Mechanismen des Flammenrückschlags und die numerische Umsetzung in Cantera
+beschrieben.
+
+% TODO: Verweise anpassen, sobald die weiteren Kapitel angelegt sind
+% Kapitel \ref{chapter:methodik} beschreibt den Versuchsaufbau und das
+% Simulationsmodell. In Kapitel \ref{chapter:ergebnisse} werden die Ergebnisse
+% dargestellt und diskutiert. Kapitel \ref{chapter:zusammenfassung} fasst die
+% Arbeit zusammen und gibt einen Ausblick.

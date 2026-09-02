@@ -1,0 +1,160 @@
+
+% LTT Document Template for Diploma/Master/Bachelor Thesis/PhD Thesis
+% -----------------------------------------------------
+%
+% original template made by: Franz Huber [Franz.Huber@ltt.uni-erlangen.de]
+
+
+\NeedsTeXFormat{LaTeX2e}
+
+%\documentclass[DIV1,liststotoc,ngerman,11pt,a5paper,BCOR5mm]{LTTLayout}
+%\documentclass[DIVclassic,ngerman,pointlessnumbers,liststotoc,tocindent,12.7pt,a5paper, nochapterprefix, open=right] {LTTLayout}
+%\documentclass[ngerman, 9pt, a5paper, open=right]{LTTLayout}
+%\pdfpageheight=210mm %Page size DinA5
+%\pdfpagewidth=148mm
+
+\documentclass[ngerman, 11pt, oneside, a4paper, open=right,]{LTTLayout}
+\pdfpageheight=297mm %Page size DinA4
+\pdfpagewidth=210mm
+
+%\bibliographystyle{abbrvdin} % Literaturverzeichnis nach DIN
+%\bibliographystyle{plaindin}
+%\bibliographystyle{osajnl_Block}
+\bibliographystyle{osajnl_newline}
+
+%\usepackage{german}
+\inputencoding{utf8}
+\usepackage{hyperref} %Referenzen mit Hyperlinks
+\usepackage{tabularx}
+\usepackage{hhline}
+\usepackage{textcomp}
+\usepackage{pbox}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{booktabs}
+\DeclareGraphicsExtensions{.pdf}
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\usepackage[version=4]{mhchem}
+\usepackage{cite}
+
+
+%\usepackage[comma,authoryear]{natbib}
+%\bibliographystyle{natdin}
+
+% Weitere Optionen
+% ----------------
+%liststotoc --> Abbildungsverzeichnis
+%tocleft --> Linksbündiges Inhaltsverzeichnis
+%\addtocounter{tocdepth}{-1}
+
+
+% schnelles Erstellen: nur diese Kapitel aufnehmen
+% ------------------------------------------------
+
+%\includeonly{Einleitung}
+
+
+\begin{document}
+
+\frontmatter
+\singlespacing
+
+
+% Erstellen der Titelseite
+% ------------------------
+
+% Title
+\thesistitle{Numerische Untersuchung von Flashback-Phänomenen in Wasserstoffflammen}
+
+% Name der Fakultät (nur für Doktorarbeit) 
+%\thesisfaculty{Diplomarbeit im Fach ...} % auf Grammatik achten!
+\thesisfaculty{Bachelorarbeit im Fach Chemie- und Bioingenieurwesen}
+
+% vorgelegt von
+\thesisauthor{Haidar Makke}
+
+% aus (nur für Doktorarbeit)
+\thesisbirthplace{Musterstadt}
+
+% Fach (nur für Diplomarbeit)
+\thesisdiscipline{Chemie- und Bioingenieurwesen}
+
+% Vorsitzender der Prüfungskommission
+% (für Diplomarbeit: Prüfer)
+\thesischairman{Prof.~Dr.-Ing. Vorsitzender}
+
+% Erstgutachter
+% (für Diplomarbeit: Betreuer 1)
+\thesisfirstreferee{Prof. Dr.-Ing. Gutachter 1}
+
+% Zweitgutachter
+% (für Diplomarbeit: Betreuer 2)
+\thesissecondreferee{Prof. Dr.-Ing. Gutachter 2}
+
+% Datum der Prüfung
+% (für Diplomarbeit: Abgabetermin)
+\thesisexamdate{Prüfungsdatum}
+
+%\makedisstitlepage % Titelseite für Doktorarbeit
+\thesisworknumber{XX-YY}
+\thesisimnumber{222111444}
+\makedipltitlepage	% Titelseite für Diplomarbeit
+
+% Verzeichnisse
+% -------------
+
+\singlespacing
+\tableofcontents
+\listoffigures
+\listoftables
+\include{Symbols}
+
+% Kapitel
+% -------
+
+\mainmatter
+\setstretch{1.3}
+
+\renewcommand*{\chapterheadstartvskip}{\vspace*{2.4\baselineskip}}% Abstand einstellen
+\include{Einleitung}
+\include{Grundlagen}
+%\include{Physikalische_Grundlagen}  % Original-Beispielkapitel der Vorlage
+%\include{...}
+
+\backmatter
+\singlespacing
+
+%\include{Anhang}
+
+
+% Literaturverzeichnis
+% --------------------
+
+% Hier Literatur ergänzen, die zwar ins Verzeichnis aufgenommen werden soll,
+% aber im Text nicht zitiert wird.
+%\nocite{Ritter83,Horn89}
+%\nocite{Jaehne99}
+\renewcommand*{\chapterheadstartvskip}{\vspace*{3.3\baselineskip}}% Abstand einstellen
+\bibliography{Literature,Literature_H2}
+
+%\include{danksagung}
+
+% Lebenslauf (nur für Doktorarbeiten)
+% -----------------------------------
+%\include{lebenslauf}
+
+% Selbstständigkeitserklärung (nur für Diplomarbeiten)
+% ----------------------------------------------------
+\include{Erklaerung}
+\include{Erklaerung_Veroeffentlichung_intern}
+\include{Erklaerung_Veroeffentlichung_extern}
+
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
